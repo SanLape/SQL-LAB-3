@@ -128,9 +128,35 @@ WHERE M.IdMulta IS NOT NULL
 -- 10 Listar los datos de las multas pagadas que se hayan labrado en la provincia de
 -- Buenos Aires.
 
+SELECT 
+    M.IdMulta, M.IdTipoInfraccion, M.IDLocalidad, M.IdAgente, M.Patente, M.FechaHora, M.Monto, M.Pagada  
+FROM 
+    Multas AS M
+LEFT JOIN 
+    Localidades AS L
+    ON L.IDLocalidad = M.IDLocalidad
+LEFT JOIN
+    Provincias AS P
+    ON L.IDProvincia = P.IDProvincia
+WHERE 
+    P.Provincia LIKE ('Buenos Aires') AND M.Pagada = 1
+
 -- 11 Listar el ID de la multa, la patente, el monto y el importe de referencia a partir del tipo
 -- de infracción cometida. También incluir una columna llamada TipoDeImporte a
 -- partir de las siguientes condiciones:
 -- 'Punitorio' si el monto de la multa es mayor al importe de referencia
 -- 'Leve' si el monto de la multa es menor al importe de referencia
 -- 'Justo' si el monto de la multa es igual al importe de referencia
+
+SELECT 
+    M.IdMulta, M.Patente, M.Monto, TI.ImporteReferencia, 
+    CASE
+        WHEN (M.Monto > TI.ImporteReferencia) THEN 'PUNITORIO'
+        WHEN (M.Monto < TI.ImporteReferencia) THEN 'LEVE'
+        WHEN (M.Monto = TI.ImporteReferencia) THEN 'JUSTO'
+    END AS 'TIPO DE IMPORTE'
+FROM 
+    Multas AS M
+LEFT JOIN
+    TipoInfracciones AS TI
+    ON TI.IdTipoInfraccion = M.IdTipoInfraccion
