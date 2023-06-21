@@ -142,3 +142,11 @@ WHERE
 -- 10 Listar por cada producto el nombre del producto, el nombre de la categoría, el precio
 -- de venta minorista, el precio de venta mayorista y el porcentaje de ahorro que se
 -- obtiene por la compra mayorista a valor mayorista en relación al valor minorista.
+
+SELECT
+    P.Descripcion, CAT.Nombre AS 'NOMBRE CATEGORIA', P.Precio, P.PrecioVentaMayorista, ((P.Precio - P.PrecioVentaMayorista)/P.Precio)*100 AS 'AHORRO'
+FROM
+    Productos AS P
+LEFT JOIN
+    Categorias AS CAT
+    ON P.IDCategoria = CAT.ID
